@@ -17,7 +17,7 @@ namespace jrh.forex
             Bars Bars = new Bars();
             Bars.SetSourceLocation(BarsPath);            
 
-            var journal = Journal.FromFile(@"C:\Users\Jason\Documents\Visual Studio 2015\Projects\jrh.forex\jrh.forex\Journal.txt", Bars);
+            var journal = Journal.FromFile(@"C:\Users\Jason\Documents\GitHub\jrh.forex\jrh.forex\Journal.txt", Bars);
 
             // Resolve unspecified values in journal
             foreach (var channel in journal.Channels)
@@ -41,6 +41,11 @@ namespace jrh.forex
                         ohlcGetterForCast,
                         comparerForCast);
 
+                // Look for a more precise time by looking at smaller timeframe for the high/low within this "bigger" bar
+                DateTime preciseTime = Charting.GetMorePreciseTime(channel.Cast, channel.Symbol, channel.Timeframe, Bars, ohlc, ohlcGetterForCast);
+                                
+                channel.Cast = new Point(preciseTime, channel.Cast.Price);                
+
                 if (channel.Support == null)
                     channel.Support = Channel.FindSupportPoint(
                         channel.Start,
@@ -51,7 +56,7 @@ namespace jrh.forex
                         );
 
                 Console.WriteLine("Channel: {0}", channel);
-                Console.WriteLine("Bar stats: {0}", Bars.StatsForSymbol(channel.Symbol, channel.Timeframe));
+                Console.WriteLine("Bar stats: {0}", Bars.StatsForSymbol(channel.Symbol, channel.Timeframe.ToString()));
             }
 
             // Output the object transfer file for MT4 script consumption
@@ -62,6 +67,7 @@ namespace jrh.forex
 
                 sw.Close();
             }
-        }
+        }             
+              
     }
 }

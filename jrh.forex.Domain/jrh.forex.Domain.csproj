@@ -43,6 +43,7 @@
     <Compile Include="Bar.cs" />
     <Compile Include="Bars.cs" />
     <Compile Include="Channel.cs" />
+    <Compile Include="Charting.cs" />
     <Compile Include="IBarProvider.cs" />
     <Compile Include="Journal.cs" />
     <Compile Include="MT4Helpers.cs" />

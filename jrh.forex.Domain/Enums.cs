@@ -1,9 +1,16 @@
 ﻿namespace jrh.forex.Domain
 {
-    public enum Interval
+    public enum Timeframe
     {
-        M1, M5, M15, M30, H1, H4, D1, W1
-    }
+        M1,
+        M5,
+        M15,
+        M30,
+        H1,
+        H4,
+        D1,
+        W1
+    }        
 
     public enum OHLC
     {

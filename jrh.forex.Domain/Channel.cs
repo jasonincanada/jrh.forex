@@ -12,7 +12,7 @@ namespace jrh.forex.Domain
     {
         public string Name;
         public string Symbol;
-        public string Timeframe;
+        public Timeframe Timeframe;
         public Handed LeftRight;
         public OHLC OHLC;
 
@@ -60,7 +60,7 @@ namespace jrh.forex.Domain
 
             var bar = afterStart
                 .Aggregate(afterStart[0], (a, b) => comparer(a, b, ohlcGetter, start));
-
+            
             return new Point(bar.Date, ohlcGetter(bar));
         }
 
@@ -90,7 +90,7 @@ namespace jrh.forex.Domain
 
             return new Point(bar.Date, ohlcGetter(bar));
         }
-
+        
         /// <summary>
         /// Calculates the slope between two price points
         /// </summary>

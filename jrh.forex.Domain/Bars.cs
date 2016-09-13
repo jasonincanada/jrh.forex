@@ -23,19 +23,13 @@ namespace jrh.forex.Domain
             _path = path;
         }
 
-        public static string HSTName(string symbol, string timeframe, string path, string extension)
+        public static string HSTName(string symbol, Timeframe timeframe, string path, string extension)
         {
             var upper = symbol.ToUpper();
-            string num = "15";
 
-            if (timeframe == "M1") num = "1";
-            if (timeframe == "M5") num = "5";
-            if (timeframe == "M15") num = "15";
-            if (timeframe == "H1") num = "60";
-            if (timeframe == "H4") num = "240";
-            if (timeframe == "D1") num = "1440";
+            int minutes = Charting.TimeframeAsMinutes(timeframe);
 
-            return path + upper + num + extension;
+            return path + upper + minutes + extension;
         }
 
         /// <summary>
@@ -44,7 +38,7 @@ namespace jrh.forex.Domain
         /// <param name="symbol"></param>
         /// <param name="timeframe"></param>
         /// <returns></returns>
-        public List<Bar> BarsForSymbol(string symbol, string timeframe)
+        public List<Bar> BarsForSymbol(string symbol, Timeframe timeframe)
         {
             if (string.IsNullOrEmpty(_path))
                 throw new InvalidOperationException("Can't call IBarProvider.BarsForSymbol() before SetSourceLocation()");

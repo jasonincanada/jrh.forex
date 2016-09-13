@@ -56,7 +56,7 @@ namespace jrh.forex.Tests
             Assert.IsNotNull(ch);
             Assert.AreEqual("AUD Hourly", ch.Name);
             Assert.AreEqual("AUDUSD", ch.Symbol);
-            Assert.AreEqual("M15", ch.Timeframe);
+            Assert.AreEqual(Timeframe.M15, ch.Timeframe);
             Assert.AreEqual(0.77315, ch.Start.Price, 0.00001);
             Assert.AreEqual(DateTime.Parse("9/8/2016 8:40"), ch.Start.Date);
             Assert.AreEqual(OHLC.Low, ch.OHLC);

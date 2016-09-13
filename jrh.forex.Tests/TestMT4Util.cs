@@ -14,7 +14,7 @@ namespace jrh.forex.Tests
             {
                 Name = "AUD Hourly Channel",
                 Symbol = "AUDUSD",
-                Timeframe = "M15",
+                Timeframe = Timeframe.M15,
                 Start = new Point(DateTime.Parse("9/8/2016 8:40"), 0.77315f),
                 Cast = new Point(DateTime.Parse("9/9/2016 2:00"), 0.76525f),
                 Support = new Point(DateTime.Parse("9/8/2016 12:00"), 0.76441f)

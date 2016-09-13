@@ -125,7 +125,8 @@ namespace jrh.forex.Domain
 
             var ch = Parsing.Forex.ParseChannel(line);
             
-            string timeframe = ch.Timeframe;
+            string chtf = ch.Timeframe;
+            var timeframe = Charting.StringToTimeframe(chtf);
             string symbol = ch.Symbol;
             Handed handed = ToHanded(ch.LeftRight[0]);
             OHLC ohlc = ToOHLC(ch.OHLC[0]);
@@ -144,7 +145,7 @@ namespace jrh.forex.Domain
             {
                 Name = ch.Label,
                 Symbol = ch.Symbol,
-                Timeframe = ch.Timeframe,
+                Timeframe = timeframe,
                 Start = start,
                 Cast = cast,
                 Support = support,

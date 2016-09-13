@@ -56,8 +56,8 @@ module Forex =
         "EURUSD"; "EURJPY"; "EURGBP"; "EURAUD"; "EURNZD";
         "GBPUSD"; "GBPJPY"; "GBPAUD"; "GBPCHF"
         "USDJPY"; "USDCAD"; "USDCHF";
+        "NZDUSD"; "NZDJPY";
         "CHFJPY";
-        "NZDUSD";
     |]
 
     // val pSymbol : -> Parser<string>
