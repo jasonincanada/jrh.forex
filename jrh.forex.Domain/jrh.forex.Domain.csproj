@@ -58,6 +58,9 @@
       <Name>jrh.forex.Parsing</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="MT4\jrh.mq4" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
