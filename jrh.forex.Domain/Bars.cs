@@ -62,6 +62,11 @@ namespace jrh.forex.Domain
             return bars;
         }
 
+        public void Flush()
+        {
+            _bars.Clear();
+        }
+
         /// <summary>
         /// Return statistics about the bars used
         /// </summary>

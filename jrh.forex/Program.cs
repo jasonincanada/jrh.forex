@@ -1,23 +1,63 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using NDesk.Options;
 using jrh.forex.Domain;
 using jrh.forex.MT4;
 
 namespace jrh.forex
 {
     class Program
-    {        
-        static string BarsPath =   @"C:\Users\Jason\AppData\Roaming\MetaQuotes\Terminal\3212703ED955F10C7534BE8497B221F4\history\OANDA-GMT-5 Live\";
-        static string OutputPath = @"C:\Users\Jason\AppData\Roaming\MetaQuotes\Terminal\3212703ED955F10C7534BE8497B221F4\MQL4\Files\";
+    {
+        // See App.config comments for descriptions of these settings
+        static string BarsPath = ConfigurationManager.AppSettings["BarsPath"];
+        static string OutputPath = ConfigurationManager.AppSettings["OutputPath"];
+        static string JournalFile = ConfigurationManager.AppSettings["JournalFile"];
+        static string DropFile = ConfigurationManager.AppSettings["DropFile"];
+        static int WatchDelaySeconds = Convert.ToInt32(ConfigurationManager.AppSettings["WatchDelaySeconds"]);
 
         static void Main(string[] args)
         {
-            Bars Bars = new Bars();
-            Bars.SetSourceLocation(BarsPath);            
+            string journalFile = string.Empty;
+            bool watch = false;
 
-            var journal = Journal.FromFile(@"C:\Users\Jason\Documents\GitHub\jrh.forex\jrh.forex\Journal.txt", Bars);
+            Bars Bars = new Bars();
+            Bars.SetSourceLocation(BarsPath);
+
+            var options = new OptionSet
+            {
+                { "journal=", x => journalFile = x },
+                { "watch", x => watch = (x != null) }
+            };
+
+            options.Parse(args);
+
+            // If not specified on the command line, use the JournalFile from App.config
+            if (string.IsNullOrEmpty(journalFile))
+                journalFile = JournalFile;
+
+            if (!string.IsNullOrEmpty(journalFile))
+            {
+                ProcessJournal(journalFile, Bars);
+
+                // By "watch" we mean just loop once a minute until ^C
+                while (watch)
+                {
+                    Console.WriteLine("Waiting {0} seconds", WatchDelaySeconds);
+                    System.Threading.Thread.Sleep(1000 * WatchDelaySeconds);
+
+                    // Cause a re-read of the history files
+                    Bars.Flush();
+                    ProcessJournal(journalFile, Bars);
+                }
+            }
+        }
+
+        private static void ProcessJournal(string journalFile, Bars Bars)
+        {
+            var journal = Journal.FromFile(journalFile, Bars);
 
             // Resolve unspecified values in journal
             foreach (var channel in journal.Channels)
@@ -43,8 +83,8 @@ namespace jrh.forex
 
                 // Look for a more precise time by looking at smaller timeframe for the high/low within this "bigger" bar
                 DateTime preciseTime = Charting.GetMorePreciseTime(channel.Cast, channel.Symbol, channel.Timeframe, Bars, ohlc, ohlcGetterForCast);
-                                
-                channel.Cast = new Point(preciseTime, channel.Cast.Price);                
+
+                channel.Cast = new Point(preciseTime, channel.Cast.Price);
 
                 if (channel.Support == null)
                     channel.Support = Channel.FindSupportPoint(
@@ -60,14 +100,13 @@ namespace jrh.forex
             }
 
             // Output the object transfer file for MT4 script consumption
-            using (var sw = new StreamWriter(OutputPath + "jrh.forex.txt"))
+            using (var sw = new StreamWriter(OutputPath + DropFile))
             {
                 foreach (var channel in journal.Channels)
                     sw.WriteLine("{0}", MT4Util.ToMT4Format(channel));
 
                 sw.Close();
             }
-        }             
-              
+        }
     }
 }
