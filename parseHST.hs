@@ -66,13 +66,13 @@ getBar :: Get HSTBar
 getBar = do
   timestamp <- getWord64le
   open      <- getDoublele
-  low       <- getDoublele
   high      <- getDoublele
+  low       <- getDoublele
   close     <- getDoublele
   volume    <- getWord64le
   spread    <- getWord32le
   realVol   <- getWord64le
-  return $ HSTBar timestamp open low high close volume spread realVol
+  return $ HSTBar timestamp open high low close volume spread realVol
 
 -- Parse bars until the file runs out
 getBars :: Get [HSTBar]
