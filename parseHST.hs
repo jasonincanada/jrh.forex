@@ -43,8 +43,9 @@ data HSTBar = HSTBar { timestamp :: Word64,
 
 -- Convert to string, excluding null bytes
 toString :: BL.ByteString -> String
-toString = map (chr . fromEnum) 
-            . filter ((/=0) . fromEnum) 
+toString = map chr
+            . filter (/=0)
+            . map fromEnum
             . BL.unpack
 
 -- Parse the header
